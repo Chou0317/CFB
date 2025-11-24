@@ -25,13 +25,13 @@ html, body {
 /* 上方標題列: 放圖片 + 文字 */
 .title-column {
     background: #309bff;
-    padding: 30px 0 30px;
-    border-radius: 20px;
+    padding: 8px 0 8px;
+    border-radius: 12px;
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px; /* 圖示和文字之間的距離 */
+    gap: 2px; /* 圖示和文字之間的距離 */
     margin-bottom: 20px;
 }
 
@@ -85,14 +85,27 @@ h1 {
 }
 
 /* 輸入欄位 */
-input {
-    width: 100%;
+.input-group {
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column; /* label 在上，input 在下 */
+}
+
+.input-group label {
     font-size: 16px;
-    padding: 10px;
-    margin-top: 15px;
+    color: #555;
+    margin-bottom: 4px;
+    font-weight: 500;
+    display: flex;
+    align-items: center; /* 圖示與文字垂直置中 */
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
     border: 1px solid #ccc;
     border-radius: 8px;
-    outline: none;
+    font-size: 16px;
     box-sizing: border-box;
 }
 

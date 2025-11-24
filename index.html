@@ -90,7 +90,7 @@
     <!-- === 上方標題區塊：圖示＋標題 === -->
     <div class="title-column">
         <!-- 圖示區，可換成自訂圖片 -->
-        <img src="DPS_logo.jpg" class="icon">
+        <img src="images/DPS_logo.jpg" class="icon">
 
         <!-- 標題文字 -->
         <h1>CFB監控LINE服務</h1>
@@ -102,14 +102,23 @@
         <ol>
             <li>輸入CFB平台的帳號與密碼。</li>
             <li>按下「綁定」後，將會與Line串聯。</li>
-            <li>若要重新綁定，需先按「解除」，再重新輸入帳號密碼。</li>
+            <li>需先按「解除」，再重新輸入帳號密碼。</li>
             <li>綁定後會收到防火毯異常警訊通知。</li>
         </ol>
     </div>
 
     <!-- === 帳號密碼輸入區塊 === -->
-    <input type="text" id="account" placeholder="請輸入帳號">
-    <input type="password" id="password" placeholder="請輸入密碼">
+    <!-- 帳號 -->
+    <div class="input-group">
+        <label for="account">👤 帳號</label>
+        <input type="text" id="account" placeholder="請輸入帳號">
+    </div>
+
+    <!-- 密碼 -->
+    <div class="input-group">
+        <label for="password">🔒 密碼</label>
+        <input type="password" id="password" placeholder="請輸入密碼">
+    </div>
 
     <!-- === 綁定 / 解除按鈕區塊 === -->
     <div class="btn-area">
@@ -129,5 +138,4 @@
 </div>
 </body>
 </html>
-
 
