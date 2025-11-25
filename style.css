@@ -31,33 +31,67 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px; /* 圖示和文字之間的距離 */
+    gap: 0px; /* 圖示和文字之間的距離 */
     margin-bottom: 20px;
 }
 
-/* 圖片 */
-.icon {
-    width: 100px;
-    height: 100px;
-    background: #ffffff;               /* 白底 */
-    border-radius: 8px;                /* 圓角方形 */
+
+/* 圖片群組（水平排列） */
+.icon-group {
+    width: 100%;
+    height: 100%;
+    margin-top: 20px;
+    justify-content: center;
+    display: flex;
+}
+
+/* 左邊圖片：左圓角、右直角 */
+.icon-left {
+    width: 160px;
+    height: 160px;
+    background: white;
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;                  /* 圖片超出圓形部分裁掉 */
-    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    overflow: hidden;
 }
 
-/* 圖片本身 */
-.icon img {
+/* 右邊圖片：右圓角、左直角，可調大小 */
+.icon-right {
+    width:140px;   /* 可自由調整 */
+    height: 160px;
+    background: white;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* 圖片本身都填滿容器 */
+.icon-left img {
+    width: 70%;
+    height: 70%;
+    object-fit: contain; /* 保持圖片比例完整，不裁切 */
+}
+
+.icon-right img {
     width: 100%;
     height: 100%;
-    object-fit: cover;                 /* 保持圖片比例並填滿圓形 */
+    margin-right: 80px;
+    object-fit: contain; /* 保持圖片比例完整，不裁切 */
 }
 
 h1 {
     margin-top: 15px;
-    font-size: 21px;
+    font-size: 33px;
     color: #ffffff;   /* 白色字體 */
     font-weight: 600;
 }
