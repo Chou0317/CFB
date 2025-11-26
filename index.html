@@ -2,188 +2,187 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
+<!-- 設定手機響應式視窗大小，禁止縮放 -->
 <meta name="viewport" content="width=400, height=640, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>CFB</title>
+
+<!-- 外部 CSS -->
 <link rel="stylesheet" href="style.css">
 
+<!-- 處理帳號綁定/解除邏輯 -->
 <script>
     window.onload = () => {
-        const accInput = document.getElementById("account"); // 帳號欄位
-        const pwdInput = document.getElementById("password"); // 密碼欄位
-        const bindBtn = document.getElementById("bindBtn"); // 登入按鈕
-        const unbindBtn = document.getElementById("unbindBtn"); // 解除按鈕
-        const pushSection = document.getElementById("pushSection"); // 推播設定區
-        const pushRadios = document.getElementsByName("push"); // 推播選項
-        const pushBtn = document.getElementById("pushBtn"); // 送出按鈕
-    
-        // --- 載入推播設定 ---
+        // 帳號 / 密碼欄位
+        const accInput  = document.getElementById("account");
+        const pwdInput  = document.getElementById("password");
+
+        // 按鈕
+        const bindBtn   = document.getElementById("bindBtn");      // 綁定
+        const unbindBtn = document.getElementById("unbindBtn");    // 解除
+
+        // 推播設定區
+        const pushSection = document.getElementById("pushSection");
+        const pushRadios  = document.getElementsByName("push");
+        const pushBtn     = document.getElementById("pushBtn");
+
+        // --- 讀取推播設定 ---
         function loadPushSetting() {
-            const savedPush = localStorage.getItem("push"); // 從 localStorage 取得先前設定
+            const savedPush = localStorage.getItem("push");
             if (savedPush === "on") {
-                // 如果先前設定為 "on"，選擇 "開啟" radio
                 document.querySelector('input[name="push"][value="on"]').checked = true;
             } else {
-                // 沒有設定或為 "off"，選擇 "關閉" radio（預設）
-                document.querySelector('input[name="push"][value="off"]').checked = true; // off
+                document.querySelector('input[name="push"][value="off"]').checked = true;
             }
         }
-    
-        // --- 登入後設定畫面 ---
-        function afterBind() {
-            accInput.readOnly = true; // 帳號欄位不可修改
-            pwdInput.parentElement.style.display = "none"; //隱藏密碼欄位
-            bindBtn.style.display = "none"; // 隱藏登入按鈕
-            unbindBtn.style.display = "block"; // 顯示解除按鈕
-            pushSection.style.display = "block"; // 顯示推播設定區
-            loadPushSetting(); // 載入使用者先前選擇或預設
-        }
-    
-        // --- 解除綁定後設定畫面 ---
-        function afterUnbind() {
-            accInput.value = ""; // 清空帳號欄位
-            pwdInput.value = ""; // 清空密碼欄位
-            accInput.readOnly = false; // 帳號可編輯
-            pwdInput.parentElement.style.display = "block"; // 顯示密碼欄位
-            bindBtn.style.display = "block"; // 顯示綁定按鈕
-            unbindBtn.style.display = "none"; // 隱藏解除按鈕
-            pushSection.style.display = "none"; // 隱藏推播設定區
-            document.querySelector('input[name="push"][value="off"]').checked = true; // radio 回預設關閉
-        }
 
-        // 初始化 guide 文字
-        function updateGuide() {
-            const guide = document.getElementById("guide");
+        // --- 依照是否已綁定帳號更新畫面 ---
+        function updateUIByBindState() {
             const savedAcc = localStorage.getItem("account");
 
             if (savedAcc) {
-            // 已綁定 → 登入後使用方法
-            guide.innerHTML = `
-                <b>使用方法：</b>
-                <ol>
-                    <li>需先按「解除」，再重新輸入帳號密碼。</li>
-                    <li>設定推播訊息-開啟或關閉。</li>
-                    <li>開啟後會收到防火毯異常警訊通知。</li>
-                </ol>
-            `;
+                // 已綁定
+                accInput.value = savedAcc;
+                pwdInput.value = "********";
+
+                accInput.readOnly = true;
+                pwdInput.readOnly = true;
+
+                // 綁定不可按、解除可按
+                bindBtn.disabled   = true;
+                bindBtn.classList.add("disabled");
+                unbindBtn.disabled = false;
+                unbindBtn.classList.remove("disabled");
+
+                // 顯示推播卡片
+                pushSection.style.display = "block";
+                loadPushSetting();
             } else {
-            // 未綁定 → 登入前使用方法
-            guide.innerHTML = `
-                <b>使用方法：</b>
-                    <ol>
-                        <li>輸入CFB平台的帳號與密碼。</li>
-                        <li>按下「綁定」後，將會與Line串聯。</li>
-                    </ol>
-                `;
+                // 未綁定
+                accInput.value = "";
+                pwdInput.value = "";
+
+                accInput.readOnly = false;
+                pwdInput.readOnly = false;
+
+                bindBtn.disabled   = false;
+                bindBtn.classList.remove("disabled");
+                unbindBtn.disabled = true;
+                unbindBtn.classList.add("disabled");
+
+                // 隱藏推播卡片
+                pushSection.style.display = "none";
+                document.querySelector('input[name="push"][value="off"]').checked = true;
             }
         }
-    
-        // --- 初始化頁面 ---
-        const savedAcc = localStorage.getItem("account");
-        updateGuide(); // 首次載入就更新使用方法
-        if (savedAcc) {
-            accInput.value = savedAcc; // 顯示已綁定帳號
-            afterBind(); // 切換畫面到已綁定狀態
-        } else {
-            accInput.readOnly = false; // 帳號可編輯
-            pwdInput.parentElement.style.display = "block"; // 顯示密碼欄位
-            bindBtn.style.display = "block"; // 顯示綁定按鈕
-            unbindBtn.style.display = "none"; // 隱藏解除按鈕
-            pushSection.style.display = "none"; // 隱藏推播設定區
-            loadPushSetting(); // 預設 radio 關閉
-        }
-    
+
+        // 初始化
+        updateUIByBindState();
+
         // --- 綁定 ---
         bindBtn.onclick = () => {
-            const acc = accInput.value.trim(); // 去掉帳號前後空白
-            const pwd = pwdInput.value.trim(); // 去掉密碼前後空白
-            // 如果帳號或密碼為空，提示使用者
-            if (acc === "" || pwd === "") { 
-                alert("請輸入帳號與密碼"); 
-                return; 
+            const acc = accInput.value.trim();
+            const pwd = pwdInput.value.trim();
+
+            if (!acc || !pwd) {
+                alert("請輸入帳號與密碼");
+                return;
             }
-    
-            // 儲存帳號與密碼到 localStorage
+
             localStorage.setItem("account", acc);
             localStorage.setItem("password", pwd);
-    
-            afterBind();  // 切換畫面到已綁定狀態
-            updateGuide(); // 綁定後更新使用方法
+
             alert("綁定成功");
+            updateUIByBindState();
         };
-    
-        // --- 解除綁定 ---
+
+        // --- 解除 ---
         unbindBtn.onclick = () => {
-            // 移除 localStorage 的帳號、密碼及推播設定
+            if (unbindBtn.disabled) return; // 沒綁定就不處理
+
             localStorage.removeItem("account");
             localStorage.removeItem("password");
-            localStorage.removeItem("push"); 
-    
-            afterUnbind(); // 切換畫面到未綁定狀態
-            updateGuide(); // 解除綁定後更新使用方法
+            localStorage.removeItem("push");
+
             alert("已解除綁定");
+            updateUIByBindState();
         };
-    
-        // --- 送出推播設定 ---
+
+        // --- 儲存推播設定 ---
         pushBtn.onclick = () => {
-            const selected = [...pushRadios].find(r => r.checked).value;  // 找出目前被選取的 radio 值
-            localStorage.setItem("push", selected); // 儲存到 localStorage
+            const selected = [...pushRadios].find(r => r.checked).value;
+            localStorage.setItem("push", selected);
             alert("推播設定已更新為：" + (selected === "on" ? "開啟" : "關閉"));
         };
     };
-    </script>
-    
+</script>
+</head>
 
 <body>
 <div class="container">
-    <!-- === 標題區 === -->
+    <!-- 上方標題區塊：圖示＋標題 -->
     <div class="title-column">
-        <div class="icon-group">
-            <div class="icon-left">
-                <img src="DPS_logo.jpg" alt="">
-            </div>
-            <div class="icon-right">
-                <img src="fire1.png" alt="">
-            </div>
+        <div class="icon-box">
+            <img class="logo-small" src="images/DPS_logo.jpg" alt="">
+            <img class="fire-large" src="images/fire3.png" alt="">
         </div>
-        <h1>CFB監控-LINE服務</h1>
+        <h1>CFB巡檢 - LINE服務</h1>
     </div>
 
-    <!-- === 使用方法區 === -->
-    <div class="guide" id="guide"></div>
-
-    <!-- === 帳號密碼輸入區 === -->
-    <div class="input-group">
-        <label for="account">👤 帳號</label>
-        <input type="text" id="account" placeholder="請輸入帳號">
-    </div>
-    <div class="input-group">
-        <label for="password">🔒 密碼</label>
-        <input type="password" id="password" placeholder="請輸入密碼">
+    <!-- 使用方法說明區塊 -->
+    <div class="guide">
+        <b>使用方法：</b>
+        <ol>
+            <li>輸入 CFB 平台的帳號與密碼。</li>
+            <li>按下「綁定」後，將會與 LINE 串聯。</li>
+            <li>如需變更帳號，請先按「解除」，再重新綁定。</li>
+            <li>綁定後可於下方調整是否接收推播通知。</li>
+        </ol>
     </div>
 
-    <!-- === 綁定 / 解除按鈕區 === -->
-    <div class="btn-area">
-        <button class="bind-btn" id="bindBtn">登入</button>
-        <button class="unbind-btn" id="unbindBtn">解除</button>
-    </div>
+    <!-- 🔔 通知設定卡：位置在帳號登入的上方 -->
+    <div class="push-section" id="pushSection">
+        <div class="push-header">通知與介面設定</div>
 
-    <!-- === 推播設定區 === -->
-    <div class="push-section" id="pushSection">    
         <div class="push-row">
-            <span>設定推播訊息：</span>
-            <label><input type="radio" name="push" value="on"> 開啟</label>
-            <label><input type="radio" name="push" value="off" checked> 關閉</label>
+            <span class="push-label">推播通知</span>
+            <label class="push-option">
+                <input type="radio" name="push" value="on"> 開啟
+            </label>
+            <label class="push-option">
+                <input type="radio" name="push" value="off" checked> 關閉
+            </label>
         </div>
-        <button class="push-submit-btn" id="pushBtn">送出</button>
+
+        <div class="push-note">
+            ※ 開啟後，CFB 有異常時會立即透過 LINE 提醒您。
+        </div>
+
+        <button class="push-submit-btn" id="pushBtn">儲存設定</button>
     </div>
 
-    <!-- === 頁尾 === -->
+    <!-- 帳號密碼輸入區塊（表單卡） -->
+    <div class="form-card">
+        <div class="input-group">
+            <label for="account">👤 帳號</label>
+            <input type="text" id="account" placeholder="請輸入帳號">
+        </div>
+
+        <div class="input-group">
+            <label for="password">🔒 密碼</label>
+            <input type="password" id="password" placeholder="請輸入密碼">
+        </div>
+
+        <div class="btn-area">
+            <button class="bind-btn" id="bindBtn">綁定</button>
+            <button class="unbind-btn" id="unbindBtn">解除</button>
+        </div>
+    </div>
+
+    <!-- 頁尾 -->
     <div class="footer">
-        <img src="dps.png" alt="dps-icon">
+        <img src="images/dps.png" alt="dps-icon">
         <span>中保防災科技股份有限公司 www.dps.tw</span>
     </div>
 </div>
 </body>
 </html>
-
-
