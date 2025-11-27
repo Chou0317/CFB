@@ -91,7 +91,7 @@
             localStorage.setItem("account", acc);
             localStorage.setItem("password", pwd);
 
-            alert("綁定成功");
+            alert("綁定LINE帳號成功，請確認推播設定是否開啟。");
             updateUIByBindState();
         };
 
@@ -103,7 +103,7 @@
             localStorage.removeItem("password");
             localStorage.removeItem("push");
 
-            alert("已解除綁定");
+            alert("已解除綁定。");
             updateUIByBindState();
         };
 
@@ -122,8 +122,8 @@
     <!-- 上方標題區塊：圖示＋標題 -->
     <div class="title-column">
         <div class="icon-box">
-            <img class="logo-small" src="DPS_logo.jpg" alt="">
-            <img class="fire-large" src="fire3.png" alt="">
+            <img class="logo-small" src="images/DPS_logo.jpg" alt="">
+            <img class="fire-large" src="images/fire3.png" alt="">
         </div>
         <h1>CFB巡檢 - LINE服務</h1>
     </div>
@@ -133,8 +133,8 @@
         <b>使用方法：</b>
         <ol>
             <li>輸入 CFB 平台的帳號與密碼。</li>
-            <li>按下「綁定」後，將會與 LINE 串聯。</li>
-            <li>如需變更帳號，請先按「解除」，再重新綁定。</li>
+            <li>按下「綁定LINE」後，將會與 LINE 串聯。</li>
+            <li>如需變更帳號，請先按「解除綁定」，再重新綁定。</li>
             <li>綁定後可於下方調整是否接收推播通知。</li>
         </ol>
     </div>
@@ -173,17 +173,16 @@
         </div>
 
         <div class="btn-area">
-            <button class="bind-btn" id="bindBtn">綁定</button>
-            <button class="unbind-btn" id="unbindBtn">解除</button>
+            <button class="bind-btn" id="bindBtn">綁定LINE</button>
+            <button class="unbind-btn" id="unbindBtn">解除綁定</button>
         </div>
     </div>
 
     <!-- 頁尾 -->
     <div class="footer">
-        <img src="dps.png" alt="dps-icon">
+        <img src="images/dps.png" alt="dps-icon">
         <span>中保防災科技股份有限公司 www.dps.tw</span>
     </div>
 </div>
 </body>
 </html>
-
